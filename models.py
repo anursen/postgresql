@@ -1,20 +1,30 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class Question(BaseModel):
     id: int
+    type: str
     text: str
-    choices: List[str]
-    correct_choice: int
+    answer: str
+    score: int
+    section: str
 
 class User(BaseModel):
     id: int
-    username: str
-    email: str
-    hashed_password: str
+    name: str
+    surname: str
+    teacher: bool
+    password: str
+
+class Answer(BaseModel):
+    question_id: int
+    answer: str
 
 class Exam(BaseModel):
-    id: int
-    title: str
-    questions: List[Question]
+    exam_id: int
     user_id: int
+    question_id: int
+    answer: str
+    correct: bool
+    score: int
+    timestamp: str

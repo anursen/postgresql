@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+<body>
+    <h1>Users</h1>
+    <button onclick="document.getElementById('add-user-form').style.display='block'">Add User</button>
+    <hr>
+    <h2>Existing Users</h2>
+    <ul id="users-list">
+        <!-- Existing users will be listed here -->
+    </ul>
+    <nav>
+        <a href="/">Back to Main Page</a>
+    </nav>
+
+    <div id="add-user-form" style="display:none;">
+        <h2>Add User</h2>
+        <form id="user-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <label for="teacher">Teacher:</label>
+            <input type="checkbox" id="teacher" name="teacher"><br>
+            <label for="admin">Admin:</label>
+            <input type="checkbox" id="admin" name="admin"><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            <button type="submit">Save User</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('user-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/add-user', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        });
+
+        function deleteUser(id) {
+            fetch(`/delete-user/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                location.reload();
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/users-data')
+                .then(response => response.json())
+                .then(data => {
+                    const usersList = document.getElementById('users-list');
+                    data.forEach(user => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${user.name} ${user.surname} (Email: ${user.email}, Teacher: ${user.teacher}, Admin: ${user.admin})`;
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = () => deleteUser(user.id);
+                        listItem.appendChild(deleteButton);
+                        usersList.appendChild(listItem);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
