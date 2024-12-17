@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responses</title>
+</head>
+<body>
+    <h1>Responses</h1>
+    <ul id="responses-list">
+        <!-- Responses will be loaded here -->
+    </ul>
+    <nav>
+        <a href="/">Back to Main Page</a>
+    </nav>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/responses-data')
+                .then(response => response.json())
+                .then(data => {
+                    const responsesList = document.getElementById('responses-list');
+                    data.forEach(response => {
+                        const li = document.createElement('li');
+                        li.innerText = `Question ID: ${response.question_id}, Response: ${response.response}`;
+                        responsesList.appendChild(li);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

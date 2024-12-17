@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+</head>
+<body>
+    <h1>Random Question</h1>
+    <div id="question-container">
+        <!-- Question will be loaded here -->
+    </div>
+    <form id="response-form">
+        <input type="hidden" id="question-id" name="question_id">
+        <label for="response">Your Answer:</label>
+        <input type="text" id="response" name="response">
+        <button type="submit">Submit</button>
+    </form>
+    <nav>
+        <a href="/questions">View Questions</a>
+        <a href="/responses">View Responses</a>
+    </nav>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/random-question')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('question-container').innerText = data.text;
+                    document.getElementById('question-id').value = data.id;
+                });
+
+            document.getElementById('response-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                fetch('/submit-response', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                  .then(data => alert(data.message));
+            });
+        });
+    </script>
+</body>
+</html>
