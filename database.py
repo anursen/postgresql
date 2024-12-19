@@ -134,11 +134,14 @@ def fetch_unique_sections():
     sections_list = [section[0] for section in sections]
     return sections_list
 
-def fetch_first_question_id():
+def fetch_first_question_id(section=None):
     connection = create_connection()
     cursor = connection.cursor()
-    cursor.execute("SELECT id FROM questions ORDER BY id LIMIT 1")
-    question_id = cursor.fetchone()[0]
+    if section:
+        cursor.execute("SELECT id FROM questions WHERE section = %s ORDER BY id LIMIT 1", (section,))
+    else:
+        cursor.execute("SELECT id FROM questions ORDER BY id LIMIT 1")
+    result = cursor.fetchone()
     cursor.close()
     connection.close()
-    return question_id
+    return result[0] if result else None

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Settings</h1>
+        <form id="admin-settings-form">
+            <div class="form-group">
+                <label for="question_time">Question Time (seconds):</label>
+                <input type="number" id="question_time" name="question_time" required min="10">
+            </div>
+
+            <div class="form-group">
+                <label for="question_count">Questions per Exam:</label>
+                <input type="number" id="question_count" name="question_count" required min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="exam_duration">Exam Duration (minutes):</label>
+                <input type="number" id="exam_duration" name="exam_duration" required min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="passing_score">Passing Score (%):</label>
+                <input type="number" id="passing_score" name="passing_score" required min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="max_attempts">Maximum Attempts:</label>
+                <input type="number" id="max_attempts" name="max_attempts" required min="1">
+            </div>
+
+            <div class="form-group checkbox">
+                <label>
+                    <input type="checkbox" id="shuffle_questions" name="shuffle_questions">
+                    Shuffle Questions
+                </label>
+            </div>
+
+            <div class="form-group checkbox">
+                <label>
+                    <input type="checkbox" id="enable_notifications" name="enable_notifications">
+                    Enable Notifications
+                </label>
+            </div>
+
+            <button type="submit">Save Settings</button>
+        </form>
+        <nav>
+            <a href="/">Back to Main Page</a>
+        </nav>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

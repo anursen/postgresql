@@ -4,15 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users</title>
+    <link rel="stylesheet" href="/static/css/users.css">
 </head>
 <body>
     <h1>Users</h1>
     <button onclick="document.getElementById('add-user-form').style.display='block'">Add User</button>
     <hr>
     <h2>Existing Users</h2>
-    <ul id="users-list">
+    <div id="users-list">
         <!-- Existing users will be listed here -->
-    </ul>
+    </div>
+    <div id="user-container">
+        <!-- User data will be displayed here -->
+    </div>
     <nav>
         <a href="/">Back to Main Page</a>
     </nav>
@@ -36,48 +40,6 @@
         </form>
     </div>
 
-    <script>
-        document.getElementById('user-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            fetch('/add-user', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                location.reload();
-            });
-        });
-
-        function deleteUser(id) {
-            fetch(`/delete-user/${id}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                location.reload();
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/users-data')
-                .then(response => response.json())
-                .then(data => {
-                    const usersList = document.getElementById('users-list');
-                    data.forEach(user => {
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `${user.name} ${user.surname} (Email: ${user.email}, Teacher: ${user.teacher}, Admin: ${user.admin})`;
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Delete';
-                        deleteButton.onclick = () => deleteUser(user.id);
-                        listItem.appendChild(deleteButton);
-                        usersList.appendChild(listItem);
-                    });
-                });
-        });
-    </script>
+    <script src="/static/js/users.js"></script>
 </body>
 </html>

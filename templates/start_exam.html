@@ -4,72 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start Exam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/start_exam.css') }}">
 </head>
 <body>
     <h1>Start Exam</h1>
-    <form id="start-exam-form">
+    <form id="start-exam-form" method="POST">
         <label for="user">Select User:</label>
         <select id="user" name="user" required>
             <!-- Users will be loaded here -->
-        </select><br>
+        </select>
+
         <label for="section">Select Section:</label>
         <select id="section" name="section" required>
             <!-- Sections will be loaded here -->
-        </select><br>
+        </select>
+
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" name="password" required>
+
         <button type="submit">Start Exam</button>
     </form>
+    
     <nav>
         <a href="/">Back to Main Page</a>
     </nav>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/non-admin-users-data')
-                .then(response => response.json())
-                .then(data => {
-                    const userSelect = document.getElementById('user');
-                    data.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.id;
-                        option.textContent = `${user.name} ${user.surname}`;
-                        userSelect.appendChild(option);
-                    });
-                });
-
-            fetch('/unique-sections')
-                .then(response => response.json())
-                .then(data => {
-                    const sectionSelect = document.getElementById('section');
-                    data.forEach(section => {
-                        const option = document.createElement('option');
-                        option.value = section;
-                        option.textContent = section;
-                        sectionSelect.appendChild(option);
-                    });
-                });
-        });
-
-        document.getElementById('start-exam-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const user = formData.get('user');
-            const section = formData.get('section');
-            const password = formData.get('password');
-            fetch('/start-exam', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = `/exam/${data.exam_id}?section=${section}&user_id=${user}`;
-                } else {
-                    alert(data.message);
-                }
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/start_exam.js') }}"></script>
 </body>
 </html>

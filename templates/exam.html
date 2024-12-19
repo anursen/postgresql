@@ -45,7 +45,7 @@
                 questionContainer.innerHTML = `<p>${question.text}</p>`;
                 resetTimer();
             } else {
-                alert('Exam completed!');
+                finishExam();
             }
         }
 
@@ -70,6 +70,21 @@
             displayQuestion();
         }
 
+        function finishExam() {
+            const exam_id = document.getElementById('exam_id').value;
+            fetch(`/evaluate-exam/${exam_id}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Exam evaluated successfully') {
+                    window.location.href = `/results/${exam_id}`;
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
         document.getElementById('answer-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
@@ -79,24 +94,24 @@
             const questionId = questions[currentQuestionIndex].id;
             fetch('/submit-response', {
                 method: 'POST',
-                body: JSON.stringify({ user_id: user_id, question_id: questionId, response: answer, exam_id: exam_id }),
+                body: JSON.stringify({ user_id: user_id, question_id: questionId, answer: answer, exam_id: exam_id }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                nextQuestion();
+            .then(response => {
+                if (response.status === 204) {
+                    nextQuestion();
+                } else {
+                    return response.json().then(data => {
+                        alert(data.message);
+                    });
+                }
             });
         });
 
         document.addEventListener("DOMContentLoaded", function() {
             const section = "{{ section }}";
-            const user_id = "{{ user_id }}";  // Ensure user_id is available
-            const exam_id = "{{ exam_id }}";  // Ensure exam_id is available
-            document.getElementById('user_id').value = user_id;
-            document.getElementById('exam_id').value = exam_id;
             loadQuestions(section);
         });
     </script>
